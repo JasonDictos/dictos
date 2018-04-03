@@ -1,0 +1,6 @@
+[submodule "net"]
+	path = net
+	url = git@bitbucket.org:cvitfresno/net.git
+[submodule "core"]
+	path = core
+	url = git@bitbucket.org:cvitfresno/core.git

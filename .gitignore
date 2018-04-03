@@ -1,0 +1,17 @@
+CMakeFiles
+_build
+CMakeCache.txt
+cmake_install.cmake
+Makefile
+_build
+3rdparty/CTestTestfile.cmake
+3rdparty/DartConfiguration.tcl
+3rdparty/catch.pc
+*.vcxproj
+.vs
+*vcxproj*
+_3rdParty
+Debug/
+CTestTestFile.cmake
+DChainConfig.cmake
+:w

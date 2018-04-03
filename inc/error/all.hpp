@@ -1,0 +1,11 @@
+#include <dictos/core/error/external.hpp>
+#include <dictos/core/error/type.hpp>
+#include <dictos/core/error/Exception.hpp>
+#include <dictos/core/error/Cancelled.hpp>
+#include <dictos/core/error/InvalidArgument.hpp>
+#include <dictos/core/error/RuntimeError.hpp>
+#include <dictos/core/error/InvalidCast.hpp>
+#include <dictos/core/error/NotFound.hpp>
+#include <dictos/core/error/BadAllocation.hpp>
+#include <dictos/core/error/macros.hpp>
+#include <dictos/core/error/block.hpp>

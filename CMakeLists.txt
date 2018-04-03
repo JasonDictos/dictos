@@ -1,0 +1,103 @@
+cmake_minimum_required(VERSION 3.10.2)
+
+include(cmake/cotire.cmake)
+
+set(CMAKE_DISABLE_IN_SOURCE_BUILD ON)
+
+# Need this for static lib relocation
+set(CMAKE_POSITION_INDEPENDENT_CODE YES)
+
+# Setup hunter gate to auto grab our 3rd party dependencies
+# (may be included by our super project so check HUNTER_WIKI)
+if (NOT HUNTER_WIKI)
+	include(cmake/HunterGate.cmake)
+	HunterGate(
+		URL "https://github.com/ruslo/hunter/archive/v0.19.238.tar.gz"
+		SHA1 "9e103596184adb7206430047375a07eb1fa6a9b4"
+	FILEPATH cmake/HunterConfig.cmake
+	)
+endif()
+
+# Declare our project and version
+project(DictosCore VERSION 0.1 LANGUAGES C CXX)
+
+# Setup our own platform settings
+include(cmake/plat.cmake)
+
+hunter_add_package(Boost COMPONENTS context fiber system)
+find_package(Boost CONFIG REQUIRED context fiber system)
+
+# Our core file list
+file(GLOB_RECURSE DictosCoreSrc [LIST_DIRECTORIES false]
+	${CMAKE_CURRENT_LIST_DIR}/src/*.cpp
+)
+file(GLOB_RECURSE DictosCoreInc [LIST_DIRECTORIES false]
+	${CMAKE_CURRENT_LIST_DIR}/inc/*.hpp
+	${CMAKE_CURRENT_LIST_DIR}/inc/*.h
+)
+
+# Declare dictos lib
+add_library(
+	DictosCore INTERFACE
+)
+
+# Require c++17
+target_compile_features(DictosCore INTERFACE cxx_std_17)
+
+# Enable extended stacktrace info for boost, requires libdl
+target_compile_definitions(DictosCore INTERFACE -DBOOST_STACKTRACE_USE_BACKTRACE)
+
+# Require clang libs
+target_link_libraries(DictosCore INTERFACE
+	Boost::fiber
+	Boost::context
+	Boost::system
+)
+
+if (DCORE_PLAT_LINUX)
+	target_link_libraries(DictosCore INTERFACE
+		dl
+		backtrace
+		pthread
+	)
+endif()
+
+# Define headers for this library. PUBLIC headers are used for
+# compiling the library, and will be added to consumers' build
+# paths.
+target_include_directories(
+	DictosCore INTERFACE
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/inc>
+)
+
+# Transfer all definitions to this target so all projects inherit them from our exported
+# config file
+target_compile_definitions(
+	DictosCore
+  	INTERFACE
+	$ENV{DCORE_COMPILE_DEFINITIONS}
+	-D_WIN32_WINNT=0x0600
+)
+
+# Setup a useful export file for inclusion in other projects
+export(TARGETS DictosCore
+	FILE DictosCoreConfig.cmake
+	EXPORT_LINK_INTERFACE_LIBRARIES
+)
+
+# Allow our package to be discoverable
+export(PACKAGE DictosCore)
+
+# Include the bin dir for config discovery
+set(CONF_INCLUDE_DIRS "${PROJECT_SOURCE_DIR}" "${PROJECT_BINARY_DIR}")
+
+# Set install targets
+install(TARGETS DictosCore EXPORT Foundation DESTINATION lib)
+install(DIRECTORY inc/ DESTINATION include FILES_MATCHING PATTERN "*.h*")
+
+# Load tests
+enable_testing()
+add_subdirectory(tests)
+
+# Load net
+add_subdirectory(net)
