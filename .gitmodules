@@ -1,6 +1,6 @@
 [submodule "net"]
 	path = net
-	url = git@bitbucket.org:cvitfresno/net.git
+	url = git@github.com:JasonDictos/dictos-net.git
 [submodule "core"]
 	path = core
 	url = git@bitbucket.org:cvitfresno/core.git
