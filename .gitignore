@@ -15,3 +15,4 @@ Debug/
 CTestTestFile.cmake
 DChainConfig.cmake
 :w
+inc/dictos/core
