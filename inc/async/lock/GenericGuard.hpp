@@ -14,16 +14,6 @@ class GenericGuard
 public:
 	using ImplPtr = std::shared_ptr<Impl>;
 
-	// Define our states which allow us to assert well known values of our
-	// properties at each one
-	enum class STATE
-	{
-		Init,
-		Locked,
-		Unlocked,
-		Rewound
-	};
-
 	GenericGuard(const GenericGuard<Impl> &guard) = delete;
 	GenericGuard<Impl> & operator = (const GenericGuard<Impl> &guard) = delete;
 
@@ -72,6 +62,7 @@ public:
 
 			case STATE::Unlocked:
 			case STATE::Init:
+			case STATE::Destructed:
 				// Nothing to do
 				break;
 		}
@@ -79,6 +70,9 @@ public:
 
 	void rewind() noexcept
 	{
+		if (m_state == STATE::Destructed)
+			return;
+
 		DCORE_ASSERT(m_impl);
 		DCORE_ASSERT(m_state == STATE::Locked);
 		m_state = STATE::Rewound;
@@ -87,6 +81,9 @@ public:
 
 	void fastFwd() noexcept
 	{
+		if (m_state == STATE::Destructed)
+			return;
+
 		DCORE_ASSERT(m_impl);
 		DCORE_ASSERT(m_state == STATE::Rewound);
 		DCORE_ASSERT(m_rewoundCount);
@@ -97,6 +94,9 @@ public:
 
 	void yield() noexcept
 	{
+		if (m_state == STATE::Destructed)
+			return;
+
 		rewind();
 		m_impl->yield();
 		fastFwd();
@@ -105,6 +105,9 @@ public:
 	template<class Rep, class Int>
 	void dispatch(time::duration<Rep, Int> wait) noexcept
 	{
+		if (m_state == STATE::Destructed)
+			return;
+
 		rewind();
 		m_impl->sleep(wait);
 		fastFwd();
@@ -115,6 +118,9 @@ public:
 
 	void unlock() noexcept
 	{
+		if (m_state == STATE::Destructed)
+			return;
+
 		DCORE_ASSERT(m_impl);
 		DCORE_ASSERT(m_state == STATE::Locked);
 		m_state = STATE::Unlocked;
@@ -123,6 +129,9 @@ public:
 
 	void lock() noexcept
 	{
+		if (m_state == STATE::Destructed)
+			return;
+
 		DCORE_ASSERT(m_impl);
 		if (m_state == STATE::Locked)
 			return;
