@@ -12,8 +12,8 @@ set(CMAKE_POSITION_INDEPENDENT_CODE YES)
 if (NOT HUNTER_WIKI)
 	include(cmake/HunterGate.cmake)
 	HunterGate(
-		URL "https://github.com/ruslo/hunter/archive/v0.19.238.tar.gz"
-		SHA1 "9e103596184adb7206430047375a07eb1fa6a9b4"
+		URL "https://github.com/ruslo/hunter/archive/v0.20.32.tar.gz"
+		SHA1 "72bd88df338cb1b02d4c36c3f85ac87b33578eab"
 	FILEPATH cmake/HunterConfig.cmake
 	)
 endif()
