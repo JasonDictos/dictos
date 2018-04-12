@@ -10,22 +10,21 @@ file(GLOB_RECURSE CoreDeps ../../core/inc/*.h ../../core/inc/*.hpp)
 
 source_group("Core" FILES ${CoreDeps})
 
-# Link to Catch2
-hunter_add_package(Catch)
-find_package(Catch CONFIG REQUIRED)
+# Fetch Catch2 testing framework
+hunter_add_package(Catch2)
+find_package(Catch2 CONFIG REQUIRED)
 
-target_link_libraries(CoreTest DictosCore Catch::Catch)
+# Link to it
+target_link_libraries(CoreTest DictosCore Catch2::Catch)
 
+# Register our tests with cmake
 add_test(CoreTest CoreTest)
 
 include_directories(
 	.
 )
 
-# Build a solution tree
-#source_group(TREE src FILES ${DictosCoreSrc})
-#source_group(TREE inc FILES ${DictosCoreInc})
-
+# Turn on the latest c++ features
 target_compile_features(CoreTest PUBLIC cxx_std_17)
 
 # Precompiled header
