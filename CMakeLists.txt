@@ -4,17 +4,13 @@ include(cmake/cotire.cmake)
 
 set(CMAKE_DISABLE_IN_SOURCE_BUILD ON)
 
-# Need this for static lib relocation
-set(CMAKE_POSITION_INDEPENDENT_CODE YES)
-
 # Setup hunter gate to auto grab our 3rd party dependencies
 # (may be included by our super project so check HUNTER_WIKI)
 if (NOT HUNTER_WIKI)
 	include(cmake/HunterGate.cmake)
 	HunterGate(
-		URL "https://github.com/ruslo/hunter/archive/v0.20.32.tar.gz"
-		SHA1 "72bd88df338cb1b02d4c36c3f85ac87b33578eab"
-	FILEPATH cmake/HunterConfig.cmake
+		URL "https://github.com/ruslo/hunter/archive/v0.20.39.tar.gz"
+		SHA1 "b49c4b58e17c1473e822f8b21fcde92fee25791d"
 	)
 endif()
 
