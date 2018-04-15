@@ -1,3 +1,4 @@
+setlocal && exit /b
 git submodule update --init net
 rm -rf _build 2>/dev/null
 mkdir _build 2>/dev/null
