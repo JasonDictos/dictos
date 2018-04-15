@@ -25,7 +25,7 @@ public:
 		copy(str.c_str(), str.size());
 	}
 
-	std::string __toString() const noexcept const
+	std::string __toString() const noexcept
 	{
 		return std::string(m_size, m_buffer);
 	}

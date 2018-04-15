@@ -1,5 +1,5 @@
 #include <tests.hpp>
-#include <catch.hpp>
+#include <catch/catch.hpp>
 
 using namespace dictos;
 

@@ -15,7 +15,7 @@ hunter_add_package(Catch)
 find_package(Catch2 CONFIG REQUIRED)
 
 # Link to it
-target_link_libraries(CoreTest DictosCore Catch)
+target_link_libraries(CoreTest DictosCore Catch2::Catch)
 
 # Register our tests with cmake
 add_test(CoreTest CoreTest)

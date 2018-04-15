@@ -1,5 +1,5 @@
 #include <tests.hpp>
-#include <catch.hpp>
+#include <catch/catch.hpp>
 #include "LockInterfaceTests.hpp"
 
 TEST_CASE("SpinLock basic test", "[spinlock_basic]")

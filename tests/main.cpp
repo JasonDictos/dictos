@@ -1,6 +1,6 @@
 #define CATCH_CONFIG_MAIN
 #include <tests.hpp>
-#include <catch.hpp>
+#include <catch/catch.hpp>
 #include <dictos/core/test/CatchListener.hpp>
 
 using namespace dictos;
