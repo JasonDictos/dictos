@@ -11,11 +11,11 @@ file(GLOB_RECURSE CoreDeps ../../core/inc/*.h ../../core/inc/*.hpp)
 source_group("Core" FILES ${CoreDeps})
 
 # Fetch Catch2 testing framework
-hunter_add_package(Catch2)
+hunter_add_package(Catch)
 find_package(Catch2 CONFIG REQUIRED)
 
 # Link to it
-target_link_libraries(CoreTest DictosCore Catch2::Catch)
+target_link_libraries(CoreTest DictosCore Catch)
 
 # Register our tests with cmake
 add_test(CoreTest CoreTest)
