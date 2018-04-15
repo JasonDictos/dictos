@@ -1,0 +1,31 @@
+version: build{build}
+
+clone_folder: c:\dev\dictos
+clone_depth: 1
+
+#init:
+
+#install:
+
+before_build:
+  - cd c:\dev\dictos
+  - config-win.bat
+
+build_script:
+  - cd c:\dev\dictos\_build
+  - msbuild
+
+#after_build:
+
+test: off
+
+# test_script:
+#   - cd c:\dev\install
+#   - start /wait %example%.exe test
+#   - cd c:\dev\examples
+
+#matrix:
+#  fast_finish: true
+
+#artifacts:
+#  - path: '*.7z'
