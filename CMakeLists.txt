@@ -71,8 +71,7 @@ target_include_directories(
 target_compile_definitions(
 	DictosCore
   	INTERFACE
-	$ENV{DCORE_COMPILE_DEFINITIONS}
-	-D_WIN32_WINNT=0x0600
+	-DDCORE_PLAT_LINUX
 )
 
 # Setup a useful export file for inclusion in other projects
@@ -94,6 +93,3 @@ install(DIRECTORY inc/ DESTINATION include FILES_MATCHING PATTERN "*.h*")
 # Load tests
 enable_testing()
 add_subdirectory(tests)
-
-# Load net
-add_subdirectory(net)
