@@ -1,5 +1,9 @@
 #pragma once
 
+/**
+ * This class renders state changes in catch to the log output. It must
+ * be in the global namespace to work with catch.
+ */
 struct CatchListener : ::Catch::TestEventListenerBase
 {
 	using TestEventListenerBase::TestEventListenerBase;

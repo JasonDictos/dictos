@@ -72,6 +72,7 @@ target_compile_definitions(
 	DictosCore
   	INTERFACE
 	-DDCORE_PLAT_LINUX
+	-D_REENTRANT
 )
 
 # Setup a useful export file for inclusion in other projects
@@ -79,9 +80,6 @@ export(TARGETS DictosCore
 	FILE DictosCoreConfig.cmake
 	EXPORT_LINK_INTERFACE_LIBRARIES
 )
-
-# Allow our package to be discoverable
-export(PACKAGE DictosCore)
 
 # Include the bin dir for config discovery
 set(CONF_INCLUDE_DIRS "${PROJECT_SOURCE_DIR}" "${PROJECT_BINARY_DIR}")

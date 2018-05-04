@@ -1,4 +1,4 @@
-#include <tests.hpp>
+#include "tests.hpp"
 #include <catch/catch.hpp>
 
 using namespace dictos;
