@@ -15,6 +15,30 @@ inline Context::Context(const Section &section, Options options) :
 	m_cachedSection = &section;
 }
 
+inline Context::Context(const Context &context)
+{
+	copy(context);
+}
+
+inline Context::Context(Context &&context)
+{
+	move(std::move(context));
+}
+
+inline Context & Context::operator = (const Context &context)
+{
+	if (this == &context)
+		return *this;
+	copy(context);
+	return *this;
+}
+
+inline Context & Context::operator = (Context &&context)
+{
+	move(std::move(context));
+	return *this;
+}
+
 inline Options Context::getOptions() const
 {
 	return m_options;
@@ -68,6 +92,26 @@ inline const Section *Context::lookupSection() const
 	if (m_cachedSection = Sections::find(m_section))
 		return m_cachedSection;
 	DCORE_THROW(NotFound, "No section found by name: ", m_section);
+}
+
+inline void Context::copy(const Context &context)
+{
+	auto lock = m_lock.lock();
+	auto _lock = context.m_lock.lock();
+
+	m_options = context.m_options;
+	m_section = context.m_section;
+	m_cachedSection = context.m_cachedSection;
+}
+
+inline void Context::move(Context &&context)
+{
+	auto lock = m_lock.lock();
+	auto _lock = context.m_lock.lock();
+
+	m_options = std::move(context.m_options);
+	m_section = std::move(context.m_section);
+	m_cachedSection = std::move(context.m_cachedSection);
 }
 
 }

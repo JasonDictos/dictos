@@ -10,6 +10,12 @@ public:
 	Context(std::string section, Options options = Options());
 	Context(const Section &section, Options options = Options());
 
+	Context(const Context &context);
+	Context(Context &&context);
+
+	Context & operator = (const Context &context);
+	Context & operator = (Context &&context);
+
 	template<class Type>
 	Type getOption(const std::string &key, const Type &def) const;
 
@@ -24,11 +30,14 @@ public:
 	void mergeOptions(Options options);
 
 protected:
+	void copy(const Context &context);
+	void move(Context &&context);
+
 	const Section *lookupSection() const;
 
 	mutable dev::BasicSpinLock m_lock;
 	Options m_options;
-	const std::string m_section;
+	std::string m_section;
 	mutable const Section *m_cachedSection = nullptr;
 };
 
