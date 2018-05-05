@@ -19,7 +19,5 @@ CTestTestfile.cmake
 DictosCoreConfig.cmake
 tests/CTestTestfile.cmake
 tests/DictosCoreTest
-tests/DictosCoreTest_CXX_None_cotire.cmake
-tests/DictosCoreTest_CXX_cotire.cmake
 tests/cotire/
 *_cotire.cmake

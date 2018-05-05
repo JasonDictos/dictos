@@ -63,7 +63,7 @@ endif()
 # paths.
 target_include_directories(
 	DictosCore INTERFACE
-    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/inc>
+	$<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/inc>
 )
 
 # Transfer all definitions to this target so all projects inherit them from our exported
