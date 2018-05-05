@@ -20,8 +20,8 @@ project(DictosCore VERSION 0.1 LANGUAGES C CXX)
 # Setup our own platform settings
 include(cmake/plat.cmake)
 
-hunter_add_package(Boost COMPONENTS context fiber system)
-find_package(Boost CONFIG REQUIRED context fiber system)
+hunter_add_package(Boost COMPONENTS context system)
+find_package(Boost CONFIG REQUIRED context system)
 
 # Our core file list
 file(GLOB_RECURSE DictosCoreSrc [LIST_DIRECTORIES false]
@@ -45,7 +45,6 @@ target_compile_definitions(DictosCore INTERFACE -DBOOST_STACKTRACE_USE_BACKTRACE
 
 # Require clang libs
 target_link_libraries(DictosCore INTERFACE
-	Boost::fiber
 	Boost::context
 	Boost::system
 )
