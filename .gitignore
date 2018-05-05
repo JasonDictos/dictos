@@ -18,9 +18,6 @@ DChainConfig.cmake
 CTestTestfile.cmake
 DictosCoreConfig.cmake
 tests/CTestTestfile.cmake
-tests/CoreTest
-tests/CoreTest_CXX_None_cotire.cmake
-tests/CoreTest_CXX_cotire.cmake
+tests/DictosCoreTest
 tests/cotire/
-
-
+*_cotire.cmake
