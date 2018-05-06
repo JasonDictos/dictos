@@ -18,7 +18,9 @@ endif()
 project(DictosCore VERSION 0.1 LANGUAGES C CXX)
 
 # Setup our own platform settings
-include(cmake/plat.cmake)
+include(cmake/dictosutil.cmake)
+
+dictosutil_setup_platform()
 
 hunter_add_package(Boost COMPONENTS context system)
 find_package(Boost CONFIG REQUIRED context system)
@@ -70,8 +72,7 @@ target_include_directories(
 target_compile_definitions(
 	DictosCore
   	INTERFACE
-	-DDCORE_PLAT_LINUX
-	-D_REENTRANT
+	${DCORE_COMPILE_DEFINITIONS}
 )
 
 # Setup a useful export file for inclusion in other projects
