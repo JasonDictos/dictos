@@ -3,7 +3,7 @@
 namespace dictos::string {
 
 template<typename S, typename T>
-class CanBeStreamedTrait
+class CanBeOutStreamedTrait
 {
     template<typename SS, typename TT>
     static auto test(int)

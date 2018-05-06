@@ -25,6 +25,7 @@ namespace dictos {
 
 #include <dictos/core/numericCast.hpp>
 #include <dictos/core/Size.hpp>
+#include <dictos/core/Uuid.hpp>
 #include <dictos/core/literals.hpp>
 #include <dictos/core/memory/all.hpp>
 

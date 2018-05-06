@@ -11,7 +11,7 @@ inline void toStringInternal(std::stringstream &stream, const Entry &entry)
 	// 4. rtti type name
 	if constexpr(dictos::string::HasToStringTrait<decltype(entry)>::value)
 		stream << entry.__toString();
-	else if constexpr(dictos::string::CanBeStreamedTrait<std::stringstream, decltype(entry)>::value)
+	else if constexpr(dictos::string::CanBeOutStreamedTrait<std::stringstream, decltype(entry)>::value)
 		stream << entry;
 	else
 		stream << dictos::log::getTypeName(entry);

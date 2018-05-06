@@ -3,8 +3,7 @@
 namespace dictos {
 
 /**
- * The size class gives type saftey to values comprising of
- * a byte size, rather then passing around integers.
+ * The UUID object represents a 128 bit uuid.
  */
 class Size
 {

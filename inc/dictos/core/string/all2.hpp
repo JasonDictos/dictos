@@ -1,3 +1,4 @@
+#include <dictos/core/string/fromString.hpp>
 #include <dictos/core/string/toString.hpp>
 #include <dictos/core/string/trim.hpp>
 #include <dictos/core/string/enclose.hpp>

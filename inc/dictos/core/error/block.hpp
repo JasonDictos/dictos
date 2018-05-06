@@ -3,7 +3,7 @@
 namespace dictos::error {
 
 template<class Call, class ...Args>
-inline std::exception_ptr block(Call &call, Args&&... args)
+inline std::exception_ptr block(const Call &call, Args&&... args)
 {
 	try
 	{

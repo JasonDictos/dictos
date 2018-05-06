@@ -6,7 +6,7 @@ namespace dictos::error {
  * Create a specialization for block with Callback.
  */
 template<>
-inline std::exception_ptr block(async::Callback &callback)
+inline std::exception_ptr block(const async::Callback &callback)
 {
 	try
 	{

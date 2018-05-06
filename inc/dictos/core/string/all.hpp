@@ -2,6 +2,9 @@
 #include <dictos/core/string/literals.hpp>
 #include <dictos/core/string/api.hpp>
 #include <dictos/core/string/HasToStringTrait.hpp>
-#include <dictos/core/string/CanBeStreamedTrait.hpp>
+#include <dictos/core/string/HasFromStringTrait.hpp>
+#include <dictos/core/string/CanBeOutStreamedTrait.hpp>
+#include <dictos/core/string/CanBeInStreamedTrait.hpp>
 #include <dictos/core/string/stream_overloads.hpp>
 #include <dictos/core/string/toString.h>
+#include <dictos/core/string/fromString.h>
