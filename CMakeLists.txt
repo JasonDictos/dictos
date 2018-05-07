@@ -51,7 +51,7 @@ target_link_libraries(DictosCore INTERFACE
 	Boost::system
 )
 
-if (DCORE_PLAT_LINUX)
+if (DCORE_PLAT_LIN)
 	target_link_libraries(DictosCore INTERFACE
 		dl
 		backtrace
