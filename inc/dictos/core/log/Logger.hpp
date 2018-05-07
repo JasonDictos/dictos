@@ -70,7 +70,7 @@ inline void Logger::write(const Args&... args)
 	auto t = std::time(nullptr);
 	std::stringstream stream;
 	stream << std::put_time(std::localtime(&t), "%Y/%m/%d %T") << logLine;
-#if defined(DCORE_PLAT_WINDOWS)
+#if defined(DCORE_PLAT_WIN)
 	OutputDebugStringA(logLine.c_str());
 #endif
 	printf("%s", stream.str().c_str());

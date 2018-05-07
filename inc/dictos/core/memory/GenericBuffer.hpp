@@ -16,7 +16,7 @@ public:
 	{
 		grow(std::distance(start, end));
 
-		if (isContiguous(start, end)) 
+		if (isContiguous(start, end))
 			std::memcpy(m_buffer, &*start, size());
 		else {
 			auto this_iter = begin();
@@ -191,16 +191,10 @@ public:
 	}
 
 	template<class T>
-	T * cast()
-	{
-		return reinterpret_cast<T *>(m_buffer);
-	}
+	auto cast() { return reinterpret_cast<T *>(m_buffer); }
 
 	template<class T>
-	const T * cast() const
-	{
-		return reinterpret_cast<const T *>(m_buffer);
-	}
+	auto cast() const { return reinterpret_cast<const T *>(m_buffer); }
 
 	const std::byte *begin() const { return &m_buffer[0]; }
 	const std::byte *end() const { return &m_buffer[m_size]; }

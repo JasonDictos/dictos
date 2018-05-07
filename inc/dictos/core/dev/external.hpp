@@ -5,6 +5,6 @@
 #include <thread>
 #include <atomic>
 
-#if defined(DCORE_PLAT_LINUX)
+#if defined(DCORE_PLAT_LIN)
 	#include <signal.h>
 #endif

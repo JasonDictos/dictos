@@ -9,7 +9,7 @@ namespace dictos::dev {
 inline void fatality(const std::string &reason, const char *filename, int line)
 {
 	log::write(reason, "File:", filename, "Line:", line);
-#if defined(DCORE_PLAT_WINDOWS)
+#if defined(DCORE_PLAT_WIN)
 	DebugBreak();
 #else
 	kill(getpid(), 2);

@@ -16,9 +16,9 @@ enum class TYPE
  */
 constexpr TYPE getCurrentType()
 {
-#if defined(DCORE_PLAT_WINDOWS)
+#if defined(DCORE_PLAT_WIN)
 	return TYPE::Windows;
-#elif defined(DCORE_PLAT_LINUX)
+#elif defined(DCORE_PLAT_LIN)
 	return TYPE::Linux;
 #elif defined(DCORE_PLAT_MAC)
 	return TYPE::Mac;

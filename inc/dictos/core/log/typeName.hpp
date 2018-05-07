@@ -10,7 +10,7 @@ inline std::string getTypeName()
 {
 	typedef typename std::remove_reference<T>::type TR;
 
-#if defined(DCORE_PLAT_LINUX)
+#if defined(DCORE_PLAT_LIN)
 	int32_t status = 0;
     return abi::__cxa_demangle(typeid(TR).name(), 0, 0, &status);
 #else

@@ -19,7 +19,6 @@ project(DictosCore VERSION 0.1 LANGUAGES C CXX)
 
 # Setup our own platform settings
 include(cmake/dictosutil.cmake)
-
 dictosutil_setup_platform()
 
 hunter_add_package(Boost COMPONENTS context system)
@@ -42,7 +41,8 @@ add_library(
 # Require c++17
 target_compile_features(DictosCore INTERFACE cxx_std_17)
 
-# Enable extended stacktrace info for boost, requires libdl
+# Enable extended stacktrace info for boost, requires libdl, and pass in the platform specific definitions
+target_compile_definitions(DictosCore INTERFACE ${DCORE_COMPILE_DEFINITIONS})
 target_compile_definitions(DictosCore INTERFACE -DBOOST_STACKTRACE_USE_BACKTRACE)
 
 # Require clang libs
