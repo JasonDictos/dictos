@@ -11,11 +11,25 @@ class GenericBuffer
 public:
 	GenericBuffer() = default;
 
+	template<class IterB, class IterE>
+	GenericBuffer(IterB start, IterE end)
+	{
+		grow(std::distance(start, end));
+
+		if (isContiguous(start, end)) 
+			std::memcpy(m_buffer, &*start, size());
+		else {
+			auto this_iter = begin();
+			while (start != end) {
+				*this_iter = boost::numeric_cast<std::byte>(*start);
+				this_iter++;
+				start++;
+			}
+		}
+	}
+
 	GenericBuffer(Size size)
 	{
-		if (size.isNegative())
-			DCORE_THROW(InvalidArgument, "Cannot allocate a buffer of negative size:", size);
-
 		grow(size);
 	}
 
@@ -187,6 +201,12 @@ public:
 	{
 		return reinterpret_cast<const T *>(m_buffer);
 	}
+
+	const std::byte *begin() const { return &m_buffer[0]; }
+	const std::byte *end() const { return &m_buffer[m_size]; }
+
+	std::byte *begin() { return &m_buffer[0]; }
+	std::byte *end() { return &m_buffer[m_size]; }
 
 protected:
 	Size m_size;

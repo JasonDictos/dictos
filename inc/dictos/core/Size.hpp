@@ -8,8 +8,8 @@ namespace dictos {
 class Size
 {
 public:
-	constexpr explicit Size(int64_t byteValue) : m_byteValue(byteValue) {}
-	constexpr explicit Size(long double byteValue) : m_byteValue((int64_t)byteValue) {}
+	template<typename SizeType>
+	constexpr Size(SizeType byteValue) : m_byteValue(boost::numeric_cast<int64_t>(byteValue)) {}
 
 	constexpr Size() : m_byteValue(0) { }
 
