@@ -56,6 +56,7 @@ if (DCORE_PLAT_LIN)
 		dl
 		backtrace
 		pthread
+		stdc++fs
 	)
 endif()
 
