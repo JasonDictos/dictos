@@ -53,21 +53,26 @@ public:
 		auto currentId = Impl::getCurrentId();
 		auto count = getCount();
 
+		// First lock the transition flag, this is a micro lock to protect 
+		// state in the spinlock (e.g. current value of ownerId etc.)
+		while (m_transitionFlag.test_and_set(std::memory_order_acquire)) {}
+
+		// Now that we have the transition flag set we can check the current id and figure out
+		// if we are recursing
 		if (getCount() && getOwnerId() == Impl::getCurrentId())
 		{
 			inc();
+
+			// Ok all done clear the transition flag
+			m_transitionFlag.clear();
 			return true;
 		}
 
-		auto result = inc(!m_flag.test_and_set(std::memory_order_acquire));
-		if (result) {
-			std::cout << "[" << Parent::m_generationId << "-" << Parent::getCurrentId() << "] LOCKED TRY SUCCESS" << std::endl;
-		} else {
-			std::cout << "[" << Parent::m_generationId << "-" << Parent::getCurrentId() << "] NOT LOCKED TRY FAILED " << std::endl;
-		}
-		currentId = Impl::getCurrentId();
-		count = getCount();
-		return result;
+		// Not recursing, acquire the locked flag after releasing the transition flag
+		m_transitionFlag.clear();
+
+		// Attempt t grab the lock and inc at the same time
+		return inc(!m_lockedFlag.test_and_set(std::memory_order_acquire));
 	}
 
 	void lock() noexcept override
@@ -78,19 +83,28 @@ public:
 
 	void unlock() noexcept override
 	{
+		// First lock the transition flag so we can check state
+		while (m_transitionFlag.test_and_set(std::memory_order_acquire)) {}
+
+		// Now check our assumptions
 		DCORE_ASSERT(getOwnerId() == Impl::getCurrentId());
 		DCORE_ASSERT(getCount() != 0);
+		
+		// Safe to dec
 		dec();
 
+		// On last dec, clear our locked flag
 		if (getCount() == 0) {
-			m_flag.clear();
-			std::cout << "[" << Parent::m_generationId << "-" << Parent::getCurrentId() << "] UNLOCKED " << std::endl;
-		} else {
+			m_lockedFlag.clear();
 		}
+
+		// All done, clear the transition flag
+		m_transitionFlag.clear();
 	}
 
 protected:
-	std::atomic_flag m_flag = {false};
+	std::atomic_flag m_lockedFlag = {false};
+	std::atomic_flag m_transitionFlag = {false};
 };
 
 }
