@@ -12,9 +12,9 @@ class GenericManager : public ManagerInterface
 public:
 	// Shortcut to parent and grab our trait types
 	using MutexLockImpl = typename Impl::MutexLockImplType;
+	using ThreadType = GenericRunnable<typename Impl::Parent>;
 
 	GenericManager(std::string name = "Global task manager") :
-		m_servicer("Task servicer", std::bind(&GenericManager::serviceLoop, this)),
 		m_name(std::move(name))
 	{
 		init();
@@ -27,7 +27,19 @@ public:
 
 	void init()
 	{
-		// @@ TODO
+		if (m_serviceThreads.empty()) {
+			LOG(task, "Manager initializing with 5 threads");
+
+			// For now jus hard core 5 threads
+			for (auto i = 0; i < 5; i ++) {
+				m_serviceThreads.emplace_back(std::make_shared<ThreadType>(
+						string::toString("Task serviver: ", i),
+						std::bind(&GenericManager::serviceLoop, this))
+					);
+			}
+
+			wakeup();
+		}
 	}
 
 	const std::string & __logPrefix() const noexcept override
@@ -37,13 +49,24 @@ public:
 
 	void deinit() noexcept override
 	{
-		// Stop the servicer
+		// Cancel all service threads
 		auto guard = m_lock.lock();
+
+		// Snap shot our thread list then unlock and cancel them all
+		auto threads = std::move(m_serviceThreads);
+
+		// Now wake  them up
 		m_condition.signal();
-		m_servicer.cancel();
+
 		guard.release();
 
-		m_servicer.cancel();
+		// Cancel and block on them now
+		for (auto &thread : threads)
+			thread->cancel();
+		for (auto &thread : threads)
+			thread->stop();
+
+		guard = m_lock.lock();
 
 		// Free any tasks we are holding
 		m_activeQueue.clear();
@@ -77,8 +100,7 @@ public:
 		DCORE_ASSERT(m_active.find(task) != m_active.end() ||
 			m_inactive.find(task.get()) != m_inactive.end());
 
-		while (m_active.find(task) != m_active.end())
-		{
+		while (m_active.find(task) != m_active.end()) {
 			wakeup();
 			m_condition.wait(guard);
 		}
@@ -94,15 +116,13 @@ protected:
 
 		LOGT(debug, "Servicer active");
 
-		while (!async::isCancelled())
-		{
+		while (!async::isCancelled()) {
 			guard.lock();
 
 			// Make a copy of all the items we need to service
 			auto toService = m_activeQueue;
 
-			if (toService.empty())
-			{
+			if (toService.empty()) {
 				m_condition.wait(guard);
 				continue;
 			}
@@ -110,8 +130,7 @@ protected:
 			guard.unlock();
 
 			// And service them
-			for (auto &service : toService)
-			{
+			for (auto &service : toService) {
 				service->invoke();
 
 				// Completed this active task, place it on inactive
@@ -139,11 +158,10 @@ protected:
 	void wakeup()
 	{
 		auto guard = m_lock.lock();
-
-		if (m_servicer.isStarted() == false)
-			m_servicer.start();
-
 		m_condition.signal();
+
+		for(auto &thread : m_serviceThreads)
+			thread->start();
 	}
 
 	// We keep tabs on tasks and their position in their priority queue
@@ -156,7 +174,7 @@ protected:
 
 	mutable lock::GenericLock<MutexLockImpl> m_lock;
 	mutable lock::GenericCondition<MutexLockImpl> m_condition;
-	mutable GenericRunnable<typename Impl::Parent> m_servicer;
+	mutable std::vector<std::shared_ptr<ThreadType>> m_serviceThreads;
 	const std::string m_name;
 };
 

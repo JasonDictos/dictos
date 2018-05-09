@@ -29,6 +29,8 @@ public:
 		return std::move(m_invoker->m_result);
 	}
 
+	using GenericTask<Impl>::getName;
+
 protected:
 	std::shared_ptr<Callback::Invoker<Func, std::result_of_t<Func(Args...)>, Args...>> m_invoker;
 	std::atomic<bool> m_resultGotten = { false };
