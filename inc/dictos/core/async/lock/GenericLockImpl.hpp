@@ -42,6 +42,10 @@ public:
 	uint32_t rewind() noexcept
 	{
 		auto unlockTotal = getCount();
+
+		auto currentId = Parent::getCurrentId();
+		auto ownerId = getOwnerId();
+
 		for (uint32_t unlockCount = 0; unlockCount < unlockTotal; unlockCount++)
 			unlock();
 		return unlockTotal;
@@ -51,24 +55,35 @@ public:
 	{
 		for (uint32_t lockCount = 0; lockCount < count; lockCount++)
 			lock();
+
+		auto currentId = Parent::getCurrentId();
+		auto ownerId = getOwnerId();
 	}
 
 protected:
 	bool inc(bool tryResult = true) noexcept
 	{
-		if (tryResult)
-		{
-			if (m_count++ == 0)
+		auto currentId = Parent::getCurrentId();
+		auto ownerId = getOwnerId();
+
+		if (tryResult) {
+			if (m_count++ == 0) {
 				m_ownerId = Parent::getCurrentId();
-			DCORE_ASSERT(getOwnerId() == Parent::getCurrentId());
+			}
+			DCORE_ASSERT(m_ownerId == currentId);
 		}
+
 		return tryResult;
 	}
 
 	void dec() noexcept
 	{
+		auto currentId = Parent::getCurrentId();
+		auto ownerId = getOwnerId();
+
 		DCORE_ASSERT(getOwnerId() == Parent::getCurrentId());
 		DCORE_ASSERT(m_count != 0);
+
 		m_count--;
 	}
 

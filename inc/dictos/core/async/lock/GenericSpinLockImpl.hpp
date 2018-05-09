@@ -50,13 +50,24 @@ public:
 
 	bool tryLock() noexcept
 	{
+		auto currentId = Impl::getCurrentId();
+		auto count = getCount();
+
 		if (getCount() && getOwnerId() == Impl::getCurrentId())
 		{
 			inc();
 			return true;
 		}
 
-		return inc(!m_flag.test_and_set(std::memory_order_acquire));
+		auto result = inc(!m_flag.test_and_set(std::memory_order_acquire));
+		if (result) {
+			std::cout << "[" << Parent::m_generationId << "-" << Parent::getCurrentId() << "] LOCKED TRY SUCCESS" << std::endl;
+		} else {
+			std::cout << "[" << Parent::m_generationId << "-" << Parent::getCurrentId() << "] NOT LOCKED TRY FAILED " << std::endl;
+		}
+		currentId = Impl::getCurrentId();
+		count = getCount();
+		return result;
 	}
 
 	void lock() noexcept override
@@ -69,11 +80,13 @@ public:
 	{
 		DCORE_ASSERT(getOwnerId() == Impl::getCurrentId());
 		DCORE_ASSERT(getCount() != 0);
-
-		if (getCount() == 1)
-			m_flag.clear();
-
 		dec();
+
+		if (getCount() == 0) {
+			m_flag.clear();
+			std::cout << "[" << Parent::m_generationId << "-" << Parent::getCurrentId() << "] UNLOCKED " << std::endl;
+		} else {
+		}
 	}
 
 protected:

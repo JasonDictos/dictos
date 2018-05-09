@@ -128,7 +128,34 @@ public:
 		return m_name;
 	}
 
+	/**
+	 * This is called by the task managers, the first one to grab the flag
+	 * gets to service the task. This returns true on the first task manager
+	 * to call it.
+	 */
+	bool pendingAquire() noexcept override 
+	{
+		auto aquired = !m_pendingFlag.test_and_set(std::memory_order_acquire);
+		if (aquired) {
+			DCORE_ASSERT(m_completed == false);
+		}
+		return aquired;
+	}
+
+	/**
+	 * Called by the task managers to report a completed task service. The
+	 * pending flag is left locked.
+	 */
+	void setCompleted() noexcept override 
+	{
+		DCORE_ASSERT(m_completed == false);
+		m_completed = true;
+	}
+
+	bool isCompleted() const noexcept override { return m_completed; }
+
 protected:
+
 	void setInvoker(std::shared_ptr<Callback::InvokerBase> invoker) noexcept override
 	{
 		auto guard = m_lock.lock();
@@ -138,8 +165,11 @@ protected:
 	Callback m_callback;
 	mutable lock::GenericLock<SpinLockImplType> m_lock;
 	std::exception_ptr m_exception;
-	std::atomic<bool> m_cancelled = {false}, m_started = {false};
 	std::shared_ptr<ManagerInterface> m_manager;
+
+	std::atomic<bool> m_cancelled = {false}, m_started = {false}, m_completed = {false};
+	std::atomic_flag m_pendingFlag = {false};
+
 	const std::string m_name;
 };
 

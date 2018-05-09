@@ -39,7 +39,7 @@ namespace string {
 template<>
 inline Uuid fromString(const std::string_view &string)
 {
-	return Uuid(boost::lexical_cast<boost::uuids::uuid>(string));
+	return Uuid(Uuid::__fromString(string));
 }
 
 }

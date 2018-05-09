@@ -11,17 +11,17 @@ namespace {
 	static std::streambuf * s_oldBuffer = nullptr;
 }
 
-util::Scope init(
-	[&]()
-{
+//util::Scope init(
+//	[&]()
+//{
 	// Redirect std::cout rdbuf to go to our logger
-	s_oldBuffer = std::cout.rdbuf(&s_stream);
+//	s_oldBuffer = std::cout.rdbuf(&s_stream);
 
 	// Enable testing output
-	log::enableLevel("all");
-},
-	[&]() { std::cout.rdbuf(s_oldBuffer); }
-);
+//	log::enableLevel("all");
+//},
+//	[&]() { std::cout.rdbuf(s_oldBuffer); }
+//);
 
 // Register our listener for logging
 CATCH_REGISTER_LISTENER(CatchListener);
