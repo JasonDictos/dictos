@@ -123,6 +123,11 @@ public:
 		}
 	}
 
+	std::string_view getName() const noexcept override
+	{
+		return m_name;
+	}
+
 protected:
 	void setInvoker(std::shared_ptr<Callback::InvokerBase> invoker) noexcept override
 	{

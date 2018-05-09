@@ -128,7 +128,7 @@ public:
 		return m_workspace.size();
 	}
 
-	const std::string & getName() const noexcept { return m_name; }
+	std::string_view getName() const noexcept override { return m_name; }
 	bool isCancelled() const noexcept override { return m_cancelled; }
 
 	void checkCancelled() const override

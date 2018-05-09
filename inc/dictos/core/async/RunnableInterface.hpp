@@ -17,7 +17,9 @@ public:
 	virtual void cancel() noexcept = 0;
 	virtual bool isCancelled() const noexcept = 0;
 	virtual void checkCancelled() const = 0;
+
 	virtual const std::string & __logPrefix() const noexcept = 0;
+	virtual std::string_view getName() const noexcept = 0;
 };
 
 }
