@@ -26,6 +26,7 @@ namespace dictos {
 
 #include "dictos/core/numericCast.hpp"
 #include "dictos/core/Size.hpp"
+#include "dictos/core/Count.hpp"
 #include "dictos/core/Uuid.hpp"
 #include "dictos/core/literals.hpp"
 #include "dictos/core/memory/all.hpp"
@@ -38,6 +39,9 @@ namespace dictos {
 // From here on out we start getting higher level, locks etc. so need to
 // start including async
 #include "dictos/core/async/all.hpp"
+
+// Higher level objects
+#include "dictos/core/util/Throughput.hpp"
 
 // Now we can include the rest of log as we have mutex now
 #include "dictos/core/config/all2.hpp"

@@ -3,7 +3,9 @@
 namespace dictos {
 
 /**
- * The UUID object represents a 128 bit uuid.
+ * The size object represents a number of bytes, and provides various
+ * means of converting its value, it will also self identify as a string
+ * convertd size string (e.g. 1GB).
  */
 class Size
 {
@@ -96,6 +98,11 @@ public:
 	constexpr bool operator != (const Size &size) const noexcept
 	{
 		return m_byteValue != size.m_byteValue;
+	}
+
+	double operator / (const time::seconds duration) const noexcept
+	{
+		return m_byteValue / static_cast<double>(duration.count());
 	}
 
 	explicit constexpr operator bool () const noexcept

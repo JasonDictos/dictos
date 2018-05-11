@@ -11,6 +11,9 @@ enum class CLOCK
 	Utc
 };
 
+using UtcStamp = std::chrono::time_point<std::chrono::system_clock>;
+using PreciseStamp = std::chrono::time_point<std::chrono::high_resolution_clock>;
+
 /**
  * Returns the current time with either Precise or System clocks. A precise clock
  * will have a higher granularity then seconds, where the system clock will simply
