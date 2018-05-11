@@ -9,6 +9,7 @@ namespace dictos::util {
  */
 class Throughput
 {
+public:
 	// Declare our bucket entry, this describes a point in time
 	// with a max and min amount of entries
 	struct Bucket
