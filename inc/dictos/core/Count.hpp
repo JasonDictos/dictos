@@ -94,6 +94,16 @@ public:
 		return m_countValue == size.m_countValue;
 	}
 
+	constexpr bool operator == (const size_t &size) const noexcept
+	{
+		return m_countValue == size;
+	}
+
+	constexpr bool operator == (const int &size) const noexcept
+	{
+		return m_countValue == size;
+	}
+
 	constexpr bool operator != (const Count &size) const noexcept
 	{
 		return m_countValue != size.m_countValue;

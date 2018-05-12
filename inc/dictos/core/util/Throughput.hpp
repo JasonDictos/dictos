@@ -29,8 +29,8 @@ public:
 		// by the total run time
 		Size size;
 		Count count;
-		Size rateSize;
-		Count rateCount;
+		double rateSize = 0;
+		double rateCount = 0;
 
 		// These fields represent copies of the values from the Throughput object itself
 		Count totalCount;
@@ -38,6 +38,13 @@ public:
 		time::seconds startTime;
 		time::seconds stopTime;
 		time::seconds runTime;
+
+		std::string __toString() const
+		{
+			if (size)
+				return string::toString(rateSize, "/sec (", size, ")[", rateCount, "/sec (", count, ")]");
+			return string::toString(rateCount, "/sec (", count, ")");
+		}
 	};
 
 	bool started() const { return m_started; }
@@ -48,7 +55,7 @@ public:
 		return m_totalSize;
 	}
 
-	uint32_t totalCount() const
+	Count totalCount() const
 	{
 		auto guard = m_spinLock.lock();
 		return m_totalCount;
@@ -59,10 +66,6 @@ public:
 	Throughput(uint32_t maxBuckets = 32, time::seconds interval = time::seconds(1)) :
 		m_maxBuckets(maxBuckets), m_interval(interval)
 	{
-		// Initialize our buckets with our bucket entry template
-		// we add 1 since one is always the current bucket being
-		// aggregated, which is not used in computations of stats
-		m_buckets.push_front(Bucket());
 	}
 
 	// We provide a now call mostly so unit testst can mock this so we can
@@ -172,11 +175,9 @@ public:
 		// Roll our windows forward if needed
 		update();
 
-		// Update the current bucket (the first one)
-		auto &bucket = m_buckets.front();
-
-		bucket.count += 1;
-		bucket.size += size;
+		// Update the current bucket 
+		m_currentBucket.count += 1;
+		m_currentBucket.size += size;
 
 		m_totalSize += size;
 		m_totalCount += 1;
@@ -271,26 +272,29 @@ public:
 		return stats;
 	}
 
-private:
+protected:
 	// Returns the number of buckets if we are started, otherwise we
 	// return 0 since the buckets are inactive when stopped.
 	uint32_t completedBucketCount()
 	{
 		auto guard = m_spinLock.lock();
-		uint32_t completedBuckets = 0;
-
-		if (m_started)
-			completedBuckets = boost::numeric_cast<uint32_t>(m_buckets.size()) - 1;
-
-		return completedBuckets;
+		if (!m_started)
+			return 0;
+		return boost::numeric_cast<uint32_t>(m_buckets.size());
 	}
 
-	void rollForward(uint32_t count)
+	template<class Type>
+	void rollForward(Type count)
 	{
-		auto guard = m_spinLock.lock();
 		for (auto i = 0; i < count; i++)
-			m_buckets.emplace_front(Bucket());
-		while (m_buckets.size() >= m_maxBuckets)
+			rollForward();
+	}
+
+	void rollForward()
+	{
+		m_buckets.push_front(m_currentBucket);
+		m_currentBucket = Bucket();
+		if (m_buckets.size() > m_maxBuckets)
 			m_buckets.pop_back();
 	}
 
@@ -307,21 +311,21 @@ private:
 		return rate;
 	}
 
-	// Clears out all the buckets with default values.
+	// Clears our bucket array and current bucket stats
 	void initializeBuckets()
 	{
 		auto guard = m_spinLock.lock();
-		m_buckets = { Bucket() };
+		m_buckets = std::list<Bucket>();
+		m_currentBucket = Bucket();
 	}
 
-private:
 	// The interval for the bucket calculator, anytime we get
 	// called to update we'll figure out how long its been since the
 	// last and roll the buckets forward
 	time::seconds m_interval;
 
 	// This flag indicates whether we are started or not
-	std::atomic<bool> m_started;
+	std::atomic<bool> m_started = {false};
 
 	// Timestamps for calls to start and stop.
 	time::seconds m_startTime, m_stopTime;
@@ -342,8 +346,12 @@ private:
 	// Our fixed queue, where each bucket lives
 	std::list<Bucket> m_buckets;
 
+	// This is our current bucket that gets lobbed onto the bucket
+	// list when the next interval passes
+	Bucket m_currentBucket;
+
 	// Max cap on the buckets
-	uint32_t m_maxBuckets;
+	uint32_t m_maxBuckets = 0;
 };
 
 }

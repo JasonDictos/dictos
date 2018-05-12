@@ -90,6 +90,16 @@ public:
 		return m_byteValue >= size.m_byteValue;
 	}
 
+	constexpr bool operator == (const size_t &size) const noexcept
+	{
+		return m_byteValue == size;
+	}
+
+	constexpr bool operator == (const int &size) const noexcept
+	{
+		return m_byteValue == size;
+	}
+
 	constexpr bool operator == (const Size &size) const noexcept
 	{
 		return m_byteValue == size.m_byteValue;
@@ -127,10 +137,23 @@ public:
 
 	std::string __toString() const
 	{
-		return string::toString(m_byteValue, " bytes");
+		return toHumanSize(m_byteValue, 2);
 	}
 
 	operator std::size_t () const { return m_byteValue; }
+
+	static std::string toHumanSize(uint64_t size, int max_precision)
+	{
+		const char* units[] = {"B", "kB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"};
+
+		int i = 0;
+		while (size >= 1024 && i < sizeof(units) / sizeof(char *)) {
+			size /= 1024;
+			i++;
+		}
+
+		return string::toString(size, units[i]);
+	}
 
 protected:
 	int64_t m_byteValue;
