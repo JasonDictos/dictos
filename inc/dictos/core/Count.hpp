@@ -136,10 +136,19 @@ public:
 
 	std::string __toString() const
 	{
-		return string::toString(m_countValue);
+		return toHumanCount(m_countValue);
 	}
 
 	operator std::size_t () const { return m_countValue; }
+
+	static std::string toHumanCount(int64_t value) 
+	{
+		auto strVal = string::toString(value);
+		for (size_t i = 3; i < strVal.size(); i += 3) {
+			strVal.insert(i, 1, ',');
+		}
+		return strVal;
+	}
 
 protected:
 	int64_t m_countValue;

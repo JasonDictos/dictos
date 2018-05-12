@@ -42,7 +42,7 @@ public:
 		std::string __toString() const
 		{
 			if (size)
-				return string::toString(rateSize, "/sec (", size, ")[", rateCount, "/sec (", count, ")]");
+				return string::toString(Size::toHumanSize(rateSize, 1), "/sec (", size, ")[", Count::toHumanCount(rateCount), "/sec (", count, ")]");
 			return string::toString(rateCount, "/sec (", count, ")");
 		}
 	};

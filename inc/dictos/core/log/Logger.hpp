@@ -21,7 +21,7 @@ inline bool Logger::isLevelEnabled(const Lvls&... lvls)
 	auto guard = m_lock.lock();
 	(isEnabled(lvls), ...);
 
-	return true;
+	return enabled;
 }
 
 template<class ...Lvls>
