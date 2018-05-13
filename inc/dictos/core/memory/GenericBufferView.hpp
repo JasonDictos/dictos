@@ -32,7 +32,7 @@ public:
 
 	GenericBufferView(const std::string &str)
 	{
-		m_begin = str.front();
+		m_buffer = str.front();
 		m_size = str.size();
 	}
 
@@ -43,7 +43,7 @@ public:
 
 	GenericBufferView<Impl> & operator = (const GenericBuffer<Impl> &buf)
 	{
-		m_buffer = buf.cast<std::byte>();
+		m_buffer = buf.template cast<std::byte>();
 		m_size = buf.size();
 		return *this;
 	}
@@ -81,10 +81,10 @@ public:
 		if (m_size != buf.size())
 			return false;
 
-		if (m_buffer == buf.cast<std::byte>())
+		if (m_buffer == buf.template cast<std::byte>())
 			return true;
 
-		return !std::memcmp(m_buffer, buf.cast<std::byte>(), m_size);
+		return !std::memcmp(m_buffer, buf.template cast<std::byte>(), m_size);
 	}
 
 	template<class ImplType>
@@ -94,10 +94,10 @@ public:
 			return -1;
 		if (m_size > buf.size())
 			return 1;
-		if (m_buffer == buf.cast<std::byte>())
+		if (m_buffer == buf.template cast<std::byte>())
 			return 0;
 
-		return std::memcmp(m_buffer, buf.cast<std::byte>(), m_size);
+		return std::memcmp(m_buffer, buf.template cast<std::byte>(), m_size);
 	}
 
 	template<class ImplType>

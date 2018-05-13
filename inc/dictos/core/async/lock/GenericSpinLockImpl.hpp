@@ -53,11 +53,13 @@ public:
 		auto currentId = Impl::getCurrentId();
 		auto count = getCount();
 
-		// First lock the transition flag, this is a micro lock to protect 
+		// First lock the transition flag, this is a micro lock to protect
 		// state in the spinlock (e.g. current value of ownerId etc.)
 		while (m_transitionFlag.test_and_set(std::memory_order_acquire)) {}
 
+#if DCORE_PLAT_WIN
 		DCORE_ASSERT(m_transitionFlag._My_flag);
+#endif
 
 		// Now that we have the transition flag set we can check the current id and figure out
 		// if we are recursing
@@ -91,7 +93,7 @@ public:
 		// Now check our assumptions
 		DCORE_ASSERT(getOwnerId() == Impl::getCurrentId());
 		DCORE_ASSERT(getCount() != 0);
-		
+
 		// Safe to dec
 		dec();
 
