@@ -341,7 +341,7 @@ protected:
 	time::seconds m_lastUpdateTime;
 
 	// Since ruby is threaded, this class is locked
-	mutable async::MutexLock m_spinLock;
+	mutable async::SpinLock m_spinLock;
 
 	// Our fixed queue, where each bucket lives
 	std::list<Bucket> m_buckets;
