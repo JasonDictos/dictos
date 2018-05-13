@@ -8,7 +8,9 @@ namespace dictos {
 class Uuid : public boost::uuids::uuid
 {
 public:
-    Uuid() : boost::uuids::uuid(boost::uuids::random_generator()()) {}
+	Uuid() = default;
+	virtual ~Uuid() = default;
+
     explicit Uuid(boost::uuids::uuid const& u) : boost::uuids::uuid(u) {}
 
     operator boost::uuids::uuid()
@@ -31,7 +33,8 @@ public:
 		return boost::lexical_cast<std::string>(static_cast<boost::uuids::uuid>(*this));
 	}
 
-	static Uuid nill() { return Uuid(boost::uuids::nil_uuid()); }
+	static auto nill() { return Uuid(boost::uuids::nil_uuid()); }
+    static auto create() { return Uuid(boost::uuids::uuid(boost::uuids::random_generator()())); }
 };
 
 namespace string {
