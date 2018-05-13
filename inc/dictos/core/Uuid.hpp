@@ -35,6 +35,8 @@ public:
 
 	static auto nill() { return Uuid(boost::uuids::nil_uuid()); }
     static auto create() { return Uuid(boost::uuids::uuid(boost::uuids::random_generator()())); }
+	explicit operator bool () const { return nill() == *this; }
+
 };
 
 namespace string {
