@@ -57,6 +57,8 @@ public:
 		// state in the spinlock (e.g. current value of ownerId etc.)
 		while (m_transitionFlag.test_and_set(std::memory_order_acquire)) {}
 
+		DCORE_ASSERT(m_transitionFlag._My_flag);
+
 		// Now that we have the transition flag set we can check the current id and figure out
 		// if we are recursing
 		if (getCount() && getOwnerId() == Impl::getCurrentId())

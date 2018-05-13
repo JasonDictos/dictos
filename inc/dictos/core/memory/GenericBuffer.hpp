@@ -28,6 +28,16 @@ public:
 		}
 	}
 
+	GenericBuffer(GenericBuffer<Impl> &&buf)
+	{
+		operator = (std::move(buf));
+	}
+
+	GenericBuffer(const GenericBuffer<Impl> &buf)
+	{
+		operator = (buf);
+	}
+
 	GenericBuffer(Size size)
 	{
 		grow(size);
@@ -42,6 +52,25 @@ public:
 	std::string __toString() const noexcept
 	{
 		return std::string(m_size, m_buffer);
+	}
+
+	GenericBuffer<Impl> & operator = (const GenericBuffer<Impl> &buf)
+	{
+		if (this == &buf)
+			return *this;
+
+		grow(buf.size());
+		copy(buf.m_buffer, buf.size());
+		return *this;
+	}
+
+	GenericBuffer<Impl> & operator = (GenericBuffer<Impl> &&buf)
+	{
+		m_buffer = buf.m_buffer;
+		m_size = buf.m_size;
+		buf.m_buffer = nullptr;
+		buf.m_size = 0;
+		return *this;
 	}
 
 	Size size() const noexcept { return m_size; }
