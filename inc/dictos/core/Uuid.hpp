@@ -23,14 +23,15 @@ public:
         return static_cast<boost::uuids::uuid const&>(*this);
     }
 
-	static Uuid __fromString(const std::string_view &str)
+	static auto __fromString(const std::string_view &str)
 	{
-		return Uuid(boost::lexical_cast<boost::uuids::uuid>(std::string(str.begin(), str.end())));
+		boost::uuids::string_generator gen;
+		return Uuid(gen(str.data()));
 	}
 
-	std::string __toString() const
+	auto __toString() const
 	{
-		return boost::lexical_cast<std::string>(static_cast<boost::uuids::uuid>(*this));
+		return boost::uuids::to_string(*this);
 	}
 
 	static auto nill() { return Uuid(boost::uuids::nil_uuid()); }

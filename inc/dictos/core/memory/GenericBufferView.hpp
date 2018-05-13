@@ -10,6 +10,8 @@ template<class Impl>
 class GenericBufferView
 {
 public:
+	GenericBufferView() = default;
+
 	GenericBufferView(const void *data, Size size) :
 		m_buffer(static_cast<const std::byte *>(data)), m_size(size)
 	{
