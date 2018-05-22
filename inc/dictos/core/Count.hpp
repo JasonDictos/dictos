@@ -130,34 +130,12 @@ public:
 
 	std::string __toString() const
 	{
-		return toHumanCount(m_countValue);
+		return string::toHumanCount(m_countValue);
 	}
 
 	operator std::size_t () const { return m_countValue; }
 
-	static std::string toHumanCount(int64_t value)
-	{
-		std::ostringstream stream;
-		recursiveCommas(stream, value);
-		return stream.str();
-	}
-
 protected:
-	template<class T>
-	static void recursiveCommas(std::ostream& os, T n)
-	{
-		T rest = n % 1000; //"last 3 digits"
-		n /= 1000;         //"begining"
-
-		if (n > 0) {
-			recursiveCommas(os, n); //printing "begining"
-
-			//and last chunk
-			os << ',' << std::setfill('0') << std::setw(3) << rest;
-		}
-		else
-			os << rest; //first chunk of the number
-	}
 
 	int64_t m_countValue;
 };

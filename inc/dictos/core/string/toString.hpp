@@ -21,6 +21,18 @@ inline void toStringInternal(std::stringstream &stream, const Entry &entry)
 
 namespace dictos::string {
 
+inline std::string toLower(const std::string_view &string) {
+	std::string copy(string.begin(), string.end());
+	boost::to_lower(copy);
+	return copy;
+}
+
+inline std::string toUpper(const std::string_view &string) {
+	std::string copy(string.begin(), string.end());
+	boost::to_upper(copy);
+	return copy;
+}
+
 /**
  * This function takes any random args and combines them into a string, allowing a delimiter
  * to be specified (anything that itself can be stringable) to be placed in between the entries.

@@ -137,23 +137,10 @@ public:
 
 	std::string __toString() const
 	{
-		return toHumanSize(m_byteValue, 2);
+		return string::toHumanSize(m_byteValue, 2);
 	}
 
 	operator std::size_t () const { return m_byteValue; }
-
-	static std::string toHumanSize(uint64_t size, int max_precision)
-	{
-		const char* units[] = {"B", "kB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"};
-
-		int i = 0;
-		while (size >= 1024 && i < sizeof(units) / sizeof(char *)) {
-			size /= 1024;
-			i++;
-		}
-
-		return string::toString(size, units[i]);
-	}
 
 protected:
 	int64_t m_byteValue;

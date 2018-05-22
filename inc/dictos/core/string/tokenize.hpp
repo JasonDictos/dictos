@@ -20,7 +20,7 @@ using Tokenizer = boost::tokenizer<Delimiter>;
 
 template<class DelimType = char>
 inline std::map<std::string, std::string> tokenizeMap(
-		const std::string_view &string,
+		const std::string &string,
 	   	const DelimType &first_delim,
 	   	const DelimType &second_delim)
 {
@@ -41,7 +41,7 @@ inline std::map<std::string, std::string> tokenizeMap(
 
 template<class DelimType = char, class ListType = std::vector<std::string>>
 inline ListType tokenizeList(
-		const std::string_view &string,
+		const std::string &string,
 	   	const DelimType &delim)
 {
 	auto tokenizer = string::Tokenizer(

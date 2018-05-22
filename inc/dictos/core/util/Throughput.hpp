@@ -34,9 +34,9 @@ public:
 		// rate_count:total_count(rate_size:total_size)[duration]
 		std::string __toString() const {
 			return string::toString(
-				Count::toHumanCount(rateCount), "/sec:", count,
-				"(", Size::toHumanSize(rateSize, 1), ":", count, ")",
-				"[", Count::toHumanCount(runTime.count()), "s]"
+				string::toHumanCount(rateCount), "/sec:", count,
+				"(", string::toHumanSize(rateSize, 1), ":", count, ")",
+				"[", string::toHumanCount(runTime.count()), "s]"
 			);
 		}
 	};

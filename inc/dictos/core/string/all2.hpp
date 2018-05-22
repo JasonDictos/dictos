@@ -6,3 +6,4 @@
 #include <dictos/core/string/append.hpp>
 #include <dictos/core/string/split.hpp>
 #include <dictos/core/string/toNumber.hpp>
+#include <dictos/core/string/toHuman.hpp>

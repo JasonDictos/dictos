@@ -30,6 +30,9 @@ inline auto now()
 		DCORE_ASSERT(!"Invalid clock type");
 }
 
+inline auto nowUtc() { return now<CLOCK::Utc>(); }
+inline auto nowPrecise() { return now<CLOCK::Precise>(); }
+
 }
 
 // Create a shortcut to the time literals
