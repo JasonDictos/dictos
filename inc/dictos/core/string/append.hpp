@@ -2,6 +2,10 @@
 
 namespace dictos::string {
 
+/**
+ * Appends the variadic ards together, using toString semantics
+ * on each, aand appends a trailing character delimiter type.
+ */
 template<char Trailing, class ...Args>
 inline std::string append(Args&&... args)
 {
