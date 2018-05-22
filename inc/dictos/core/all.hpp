@@ -31,6 +31,9 @@ namespace dictos {
 #include "dictos/core/literals.hpp"
 #include "dictos/core/memory/all.hpp"
 
+// Load platform apis now
+#include "dictos/core/plat/all2.hpp"
+
 // Bootstrap some util stuff that doesn't depend on async directly
 #include "dictos/core/util/macros.hpp"
 #include "dictos/core/util/external.hpp"

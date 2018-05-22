@@ -22,28 +22,22 @@ public:
 	 * The stats entry gets returned to snapshot the
 	 * current state of the throughput during a run.
 	 */
-	struct Stats
-	{
-		// These fields are set as the 'current size/count/rate' of the active buckets while the throughput is
-		// started, when it is stopped they represent the 'summary size/count/rate' which is calculated
-		// by the total run time
+	struct Stats {
 		Size size;
 		Count count;
 		double rateSize = 0;
 		double rateCount = 0;
 
-		// These fields represent copies of the values from the Throughput object itself
-		Count totalCount;
-		Size totalSize;
-		time::seconds startTime;
-		time::seconds stopTime;
 		time::seconds runTime;
 
-		std::string __toString() const
-		{
-			if (size)
-				return string::toString(Size::toHumanSize(rateSize, 1), "/sec (", size, ")[", Count::toHumanCount(rateCount), "/sec (", count, ")]");
-			return string::toString(rateCount, "/sec (", count, ")");
+		// Renders a these stats as a string in the form of:
+		// rate_count:total_count(rate_size:total_size)[duration]
+		std::string __toString() const {
+			return string::toString(
+				Count::toHumanCount(rateCount), "/sec:", count,
+				"(", Size::toHumanSize(rateSize, 1), ":", count, ")",
+				"[", Count::toHumanCount(runTime.count()), "s]"
+			);
 		}
 	};
 
@@ -244,29 +238,16 @@ public:
 
 		update();
 
-		stats.startTime = m_startTime;
-		stats.stopTime = m_stopTime;
 		stats.runTime = runTime();
-		stats.totalSize = m_totalSize;
-		stats.totalCount = m_totalCount;
+		stats.size = m_totalSize;
+		stats.count = m_totalCount;
 
 		if (!m_started && stats.runTime != time::seconds(0)) {
-			// Inactive, but have been ran before, calculate based on
-			// totals and run time
-			stats.size = m_totalSize;
-			stats.count = m_totalCount;
-
 			stats.rateSize = calculateAverage(stats.size, stats.runTime);
 			stats.rateCount = calculateAverage(stats.count, stats.runTime);
-		} else if (completedBucketCount()) {
-			// Active so, size/count/rates all represent the 'current' calculation based on
-			// active buckets
-			stats.size = currentSize();
-			stats.count = currentCount();
-
-			// If we're active and something got completed, report the current rate up till now
-			stats.rateSize = calculateRate(stats.size);
-			stats.rateCount = calculateRate(stats.count);
+		} else if (m_totalCount || m_totalSize) {
+			stats.rateSize = calculateRate(currentSize());
+			stats.rateCount = calculateRate(currentCount());
 		}
 
 		return stats;

@@ -16,12 +16,6 @@ public:
 
 	constexpr operator int64_t () { return m_countValue; }
 
-	static constexpr Count bytes(long double number) { return Count(number); }
-	static constexpr Count kilobytes(long double number) { return Count(number * 1024); }
-	static constexpr Count megabytes(long double number) { return Count(number * 1024 * 1024); }
-	static constexpr Count gigabytes(long double number) { return Count(number * 1024 * 1024 * 1024); }
-	static constexpr Count terabytes(long double number) { return Count(number * 1024 * 1024 * 1024 * 1024); }
-
 	Count(const Count &size) :
 		m_countValue(size.m_countValue)
 	{
@@ -64,7 +58,7 @@ public:
 	}
 
 	template<class T = size_t>
-	T asBytes() const
+	T asNumber() const
 	{
 		return numericCast<T>(m_countValue);
 	}

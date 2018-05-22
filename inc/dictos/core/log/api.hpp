@@ -36,6 +36,7 @@ inline Logger *getGlobalLogger()
 template<class ...Lvls>
 inline bool isLevelEnabled(const Lvls&... lvls)
 {
+	return true;
 	if (auto canCall = checkRecursion())
 		return getLogger()->isLevelEnabled(std::forward<const Lvls&>(lvls)...);;
 	return false;
