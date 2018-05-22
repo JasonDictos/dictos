@@ -53,8 +53,8 @@ public:
 
 		DCORE_ASSERT(m_callback);
 
-		m_manager->start(getTaskPtr());
 		m_started = true;
+		m_manager->start(getTaskPtr());
 	}
 
 	void stop() noexcept override
