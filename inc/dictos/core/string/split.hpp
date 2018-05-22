@@ -4,8 +4,7 @@ namespace dictos::string {
 
 inline std::pair<std::string, std::string> split(
 	const std::string_view &delim,
-	const std::string_view &str
-)
+	const std::string_view &str)
 {
 	std::pair<std::string, std::string> result;
 
