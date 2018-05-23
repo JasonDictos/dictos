@@ -2,43 +2,11 @@
 
 namespace dictos::log {
 
-namespace {
-	inline auto checkRecursion()
-	{
-		static dictos::dev::BasicSpinLock s_guard;
-		return s_guard.checkRecursionLock();
-	}
-
-	/**
-	 * The internal get logger call does not check for recursion redundantly
-	 */
-	inline Logger *getLogger()
-	{
-		static Logger logger;
-		return &logger;
-	}
-}
-
-/**
- * Returns a reference to the global logger. In recursion situations
- * nullptr will be returned.
- */
-inline Logger *getGlobalLogger()
-{
-	auto canCall = checkRecursion();
-	if (!canCall)
-		return nullptr;
-
-	static Logger logger;
-	return &logger;
-}
-
 template<class ...Lvls>
 inline bool isLevelEnabled(const Lvls&... lvls)
 {
-	return true;
 	if (auto canCall = checkRecursion())
-		return getLogger()->isLevelEnabled(std::forward<const Lvls&>(lvls)...);;
+		return GlobalLogger()->isLevelEnabled(std::forward<const Lvls&>(lvls)...);;
 	return false;
 }
 
@@ -46,14 +14,14 @@ template<class ...Lvls>
 inline void enableLevel(const Lvls&... lvls)
 {
 	if (auto canCall = checkRecursion())
-		return getLogger()->enableLevel(std::forward<const Lvls&>(lvls)...);
+		return GlobalLogger()->enableLevel(std::forward<const Lvls&>(lvls)...);
 }
 
 template<class ...Lvls>
 inline void disableLevel(const Lvls&... lvls)
 {
 	if (auto canCall = checkRecursion())
-		getLogger()->disableLevel(std::forward<const Lvls&>(lvls)...);
+		GlobalLogger()->disableLevel(std::forward<const Lvls&>(lvls)...);
 }
 
 /**
@@ -80,7 +48,7 @@ inline void writePrefix(const std::string_view &level, const Prefix &prefix, con
 {
 	if (auto canCall = checkRecursion())
 	{
-		auto logger = getLogger();
+		auto logger = GlobalLogger();
 		if (logger->isLevelEnabled(level))
 			logger->writePrefix(prefix, std::forward<const Args&>(args)...);
 	}
@@ -95,7 +63,7 @@ inline void writeLevel(const std::string_view &level, const Args&... args)
 {
 	if (auto canCall = checkRecursion())
 	{
-		auto logger = getLogger();
+		auto logger = GlobalLogger();
 
 		if (logger->isLevelEnabled(level))
 			logger->write(std::forward<const Args&>(args)...);
@@ -109,7 +77,7 @@ template<class ...Args>
 inline void write(const Args&... args)
 {
 	if (auto canCall = checkRecursion())
-		getLogger()->write(std::forward<const Args&>(args)...);
+		GlobalLogger()->write(std::forward<const Args&>(args)...);
 }
 
 }

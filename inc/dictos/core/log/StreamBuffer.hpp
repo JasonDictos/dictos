@@ -14,10 +14,9 @@ public:
 	{ 
 	}
 
-	virtual int sync() 
-	{ 
+	virtual int sync() { 
 		auto _str = str();
-		writePrefix("test", m_prefix, _str);
+		writePrefix("TEST", m_prefix, _str);
 		str("");
 		return int (_str.size());
 	}

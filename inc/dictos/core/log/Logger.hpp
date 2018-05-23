@@ -2,10 +2,6 @@
 
 namespace dictos::log {
 
-inline Logger::Logger(config::Options options) :
-	Context(getSection(), std::move(options)) {
-}
-
 template<class ...Lvls>
 inline bool Logger::isLevelEnabled(const Lvls&... lvls) {
 	bool enabled = false;

@@ -35,24 +35,26 @@ file(GLOB_RECURSE DictosCoreInc [LIST_DIRECTORIES false]
 
 # Declare dictos lib
 add_library(
-	DictosCore INTERFACE
+	DictosCore SHARED
+	${DictosCoreSrc}
+	${DictosCoreInc}
 )
 
 # Require c++17
-target_compile_features(DictosCore INTERFACE cxx_std_17)
+target_compile_features(DictosCore PUBLIC cxx_std_17)
 
 # Enable extended stacktrace info for boost, requires libdl, and pass in the platform specific definitions
-target_compile_definitions(DictosCore INTERFACE ${DCORE_COMPILE_DEFINITIONS})
-target_compile_definitions(DictosCore INTERFACE -DBOOST_STACKTRACE_USE_BACKTRACE)
+target_compile_definitions(DictosCore PUBLIC ${DCORE_COMPILE_DEFINITIONS})
+target_compile_definitions(DictosCore PUBLIC -DBOOST_STACKTRACE_USE_BACKTRACE)
 
 # Require clang libs
-target_link_libraries(DictosCore INTERFACE
+target_link_libraries(DictosCore PUBLIC
 	Boost::context
 	Boost::system
 )
 
 if (DCORE_PLAT_LIN)
-	target_link_libraries(DictosCore INTERFACE
+	target_link_libraries(DictosCore PUBLIC
 		dl
 		backtrace
 		pthread
@@ -64,7 +66,7 @@ endif()
 # compiling the library, and will be added to consumers' build
 # paths.
 target_include_directories(
-	DictosCore INTERFACE
+	DictosCore PUBLIC
 	$<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/inc>
 )
 
@@ -72,7 +74,7 @@ target_include_directories(
 # config file
 target_compile_definitions(
 	DictosCore
-  	INTERFACE
+  	PUBLIC
 	${DCORE_COMPILE_DEFINITIONS}
 )
 
@@ -85,9 +87,9 @@ export(TARGETS DictosCore
 # Include the bin dir for config discovery
 set(CONF_INCLUDE_DIRS "${PROJECT_SOURCE_DIR}" "${PROJECT_BINARY_DIR}")
 
-# Set install targets
-install(TARGETS DictosCore EXPORT Foundation DESTINATION lib)
-install(DIRECTORY inc/ DESTINATION include FILES_MATCHING PATTERN "*.h*")
+# Set install targets @@ TODO
+#install(TARGETS DictosCore EXPORT Foundation DESTINATION lib)
+#install(DIRECTORY inc/ DESTINATION include FILES_MATCHING PATTERN "*.h*")
 
 # Load tests
 enable_testing()
