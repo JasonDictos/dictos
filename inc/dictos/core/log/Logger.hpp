@@ -4,6 +4,9 @@ namespace dictos::log {
 
 template<class ...Lvls>
 inline bool Logger::isLevelEnabled(const Lvls&... lvls) {
+	if (m_allLevelsEnabled)
+		return true;
+
 	bool enabled = false;
 	auto isEnabled = [&enabled,this](const std::string_view &t) {
 		auto lvl_str = std::string(t.begin(), t.end());
