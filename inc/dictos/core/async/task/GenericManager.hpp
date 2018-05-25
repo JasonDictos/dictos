@@ -129,8 +129,8 @@ protected:
 			}
 
 			// Service it
+			guard.unlock();
 			task->invoke();
-
 			guard.lock();
 
 			// One more completed task
